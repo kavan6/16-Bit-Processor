@@ -1,0 +1,101 @@
+$date
+	Thu Aug 22 13:58:04 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ns
+$end
+$scope module adder1bit_tb $end
+$var wire 1 ! S $end
+$var wire 1 " C_out $end
+$var reg 1 # A $end
+$var reg 1 $ B $end
+$var reg 1 % C_in $end
+$var reg 1 & c1 $end
+$var reg 1 ' c2 $end
+$var reg 1 ( c3 $end
+$var integer 32 ) i [31:0] $end
+$scope module UUT $end
+$var wire 1 # A $end
+$var wire 1 $ B $end
+$var wire 1 % C_in $end
+$var wire 1 " C_out $end
+$var wire 1 ! S $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx )
+1(
+1'
+1&
+x%
+x$
+x#
+x"
+x!
+$end
+#20
+0"
+0!
+0%
+0$
+0#
+0(
+0'
+0&
+b0 )
+#40
+1!
+1%
+1(
+b1 )
+#60
+0%
+1!
+1$
+0(
+1'
+b10 )
+#80
+1"
+0!
+1%
+1(
+b11 )
+#100
+0"
+0%
+0$
+1!
+1#
+0(
+0'
+1&
+b100 )
+#120
+1"
+0!
+1%
+1(
+b101 )
+#140
+0%
+0!
+1$
+0(
+1'
+b110 )
+#160
+1!
+1%
+1(
+b111 )
+#180
+b1000 )
