@@ -21,11 +21,6 @@ initial begin
 
     #20;
 
-    // A = 1'b0; B = 1'b0; C_in = 1'b0; #20;
-    // A = 1'b0; B = 1'b0; C_in = 1'b1; #20;
-    // A = 1'b0; B = 1'b1; C_in = 1'b0; #20;
-    // A = 1'b0; B = 1'b1; C_in = 1'b1; #20;
-
     for (i = 0; i < 8; i = i + 1) begin
         
         if ((i % 4) == 0) begin
