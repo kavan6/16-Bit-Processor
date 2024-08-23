@@ -1,7 +1,7 @@
-// Created by Kavan Heppenstall, 22/08/2024
+// Created by Kavan Heppenstall, 23/08/2024
 
 `timescale 1ns/1ns
-`include ""
+`include "multiplexer.v"
 
 
 module tb;
@@ -13,8 +13,12 @@ reg clk;
 
 // I/Os
 
+reg [15:0] A, B; 
+reg sel;
 
-DEVICE_UNDER_TEST dut();
+wire [15:0] Q;
+
+multiplexer16bit dut(A, B, sel, Q);
 
 
 initial begin
@@ -32,13 +36,19 @@ end
 
 initial begin
 
-    $dumpfile("this.vcd");
+    $dumpfile("multiplexer16bit_tb.vcd");
     $dumpvars;
 
 end
 
 initial begin // Test Cases
     
+    #20;
+    A = 16'h0000; B = 16'h0000; sel = 1'b0; #20;
+    A = 16'hAAAA; B = 16'h0000; sel = 1'b0; #20;
+    A = 16'hAAAB; B = 16'h0DE4; sel = 1'b1; #20;
+    A = 16'hAAAB; B = 16'h0DE4; sel = 1'b0; #20;
+
 
 
     $display("end simulation");
