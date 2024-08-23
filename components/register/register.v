@@ -33,7 +33,7 @@ output [15:0] Q;
 
 genvar i;
 generate
-    for (i = 0; i < 16; i = i + 1) begin : gen_flipflops
+    for (i = 0; i < 16; i = i + 1) begin : dff
         dflipflop D (
             .D(D[i]),
             .clk(clk),
