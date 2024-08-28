@@ -1,7 +1,7 @@
-// Created by Kavan Heppenstall, 26/08/2024
+// Created by Kavan Heppenstall, 28/08/2024
 
 `timescale 1ns/1ns
-`include "state.v"
+`include "incrementer.v"
 
 
 module tb;
@@ -13,11 +13,12 @@ reg clk;
 
 // I/Os
 
-reg en, reset;
+reg [15:0] A;
 
-wire [1:0] state;
+wire [15:0] Q;
 
-fdemachine dut(clk, en, reset, state);
+
+pcincrementer dut(A, clk, Q);
 
 
 initial begin
@@ -35,17 +36,22 @@ end
 
 initial begin
 
-    $dumpfile("fdemachine_tb.vcd");
+    $dumpfile("pcincrementer_tb.vcd");
     $dumpvars;
 
 end
 
 initial begin // Test Cases
     
-    en = 1'b0; reset = 1'b0; #20;
-    en = 1'b1; #20;
-    reset = 1'b1; #20;
-    reset = 1'b0; #20;
+    #20;
+
+    A = 16'h0000; #20;
+    A = Q; #20;
+    A = Q; #20;
+    A = Q; #20;
+    A = Q; #20;
+    A = Q; #20;
+
 
     $display("end simulation");
 

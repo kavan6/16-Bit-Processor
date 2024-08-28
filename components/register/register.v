@@ -1,22 +1,25 @@
 // Created by Kavan Heppenstall, 22/08/2024
 
-module dflipflop(D, clk, reset, Q);
+module dflipflop(D, clk, en, reset, Q);
 
-input D, clk, reset;
+input D, clk, en, reset;
 
 output reg Q;
 
 
 always @(posedge clk) begin
     
-    if (reset) begin
+    if (en) begin
+
+        if (reset) begin
         
         Q <= 1'b0;
 
-    end else begin
-        
-        Q <= D;
+        end else begin
+            
+            Q <= D;
 
+        end
     end
 
 end
@@ -24,9 +27,10 @@ end
 
 endmodule
 
-module register16bit(D, clk, reset, Q);
+module register16bit(D, clk, en, reset, Q);
 
 input [15:0] D;
+input [15:0] en;
 input clk, reset;
 
 output [15:0] Q;
@@ -37,6 +41,7 @@ generate
         dflipflop D (
             .D(D[i]),
             .clk(clk),
+            .en(en[i])
             .reset(reset),
             .Q(Q[i])
         );

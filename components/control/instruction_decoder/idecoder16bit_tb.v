@@ -1,7 +1,7 @@
-// Created by Kavan Heppenstall, 26/08/2024
+// Created by Kavan Heppenstall, 28/08/2024
 
 `timescale 1ns/1ns
-`include "state.v"
+`include "idecoder.v"
 
 
 module tb;
@@ -13,11 +13,12 @@ reg clk;
 
 // I/Os
 
-reg en, reset;
+reg [15:0] A;
 
-wire [1:0] state;
+wire [3:0] OP, Q0, Q1, DEST;
 
-fdemachine dut(clk, en, reset, state);
+
+instructiondecoder dut(.A(A), .OP(OP), .Q0(Q0), .Q1(Q1), .DEST(DEST));
 
 
 initial begin
@@ -35,17 +36,20 @@ end
 
 initial begin
 
-    $dumpfile("fdemachine_tb.vcd");
+    $dumpfile("idecoder16bit_tb.vcd");
     $dumpvars;
 
 end
 
 initial begin // Test Cases
     
-    en = 1'b0; reset = 1'b0; #20;
-    en = 1'b1; #20;
-    reset = 1'b1; #20;
-    reset = 1'b0; #20;
+    #20;
+
+    A = 16'h0000; #20;
+    A = 16'hABCD; #20;
+    A = 16'hAE13; #20;
+    A = 16'hFFE1; #20;
+
 
     $display("end simulation");
 

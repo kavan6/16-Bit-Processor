@@ -1,8 +1,8 @@
 //Created by Kavan Heppenstall, 26/08/2024
 
-module fdemachine(clk, en, state);
+module fdemachine(clk, en, reset, state);
 
-input clk, en;
+input clk, en, reset;
 
 output reg [1:0] state;
 
@@ -11,18 +11,30 @@ localparam decode = 2'b01;
 localparam execute = 2'b10;
 localparam memory = 2'b11;
 
-localparam next_state = 2'b00;
-
 always @(posedge clk) begin
+    
     if (en) begin
-        if(next_state == 2'b10) begin
-            next_state = 2'b00;
+
+        if (reset) begin
+            state <= fetch;
         end else begin
-            next_state = next_state + 1; 
+            case (state)
+                fetch: begin
+                    state <= decode;
+                end
+                decode: begin
+                    state <= execute;
+                end
+                execute: begin
+                    state <= fetch;
+                end
+
+                default: state <= fetch;
+            endcase
         end
 
-        state = next_state;
     end
+
 end
 
 endmodule
