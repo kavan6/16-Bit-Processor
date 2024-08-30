@@ -41,7 +41,7 @@ generate
         dflipflop D (
             .D(D[i]),
             .clk(clk),
-            .en(en[i])
+            .en(en[i]),
             .reset(reset),
             .Q(Q[i])
         );
@@ -51,19 +51,45 @@ endgenerate
 
 endmodule
 
-module register8bit(D, clk, Q, reset);
+module register8bit(D, clk, en, Q, reset);
 
 input [7:0] D;
+input [7:0] en;
 input clk, reset;
 
 output [7:0] Q;
 
 genvar i;
 generate
-    for (i = 0; i < 8; i = i + 1) begin : gen_flipflops
+    for (i = 0; i < 8; i = i + 1) begin : dff
         dflipflop D (
             .D(D[i]),
             .clk(clk),
+            .en(en[i]),
+            .reset(reset),
+            .Q(Q[i])
+        );
+    end
+endgenerate
+
+
+endmodule
+
+module register4bit(D, clk, en, Q, reset);
+
+input [3:0] D;
+input [3:0] en;
+input clk, reset;
+
+output [3:0] Q;
+
+genvar i;
+generate
+    for (i = 0; i < 4; i = i + 1) begin : dff
+        dflipflop D (
+            .D(D[i]),
+            .clk(clk),
+            .en(en[i]),
             .reset(reset),
             .Q(Q[i])
         );

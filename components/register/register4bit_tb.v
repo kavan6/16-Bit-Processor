@@ -1,4 +1,4 @@
-// Created by Kavan Heppenstall, 22/08/2024
+// Created by Kavan Heppenstall, 28/08/2024
 
 `timescale 1ns/1ns
 `include "register.v"
@@ -10,13 +10,12 @@ parameter RUNTIME = 100000;
 
 reg clk;
 
-reg [15:0] D;
-reg [15:0] en;
+reg [3:0] D, en;
 reg reset;
 
-wire [15:0] Q;
+wire [3:0] Q;
 
-register16bit dut(.D(D), .clk(clk), .en(en), .reset(reset), .Q(Q));
+register4bit dut(.D(D), .clk(clk), .en(en), .reset(reset), .Q(Q));
 
 initial begin
     $display("starting simulation");
@@ -33,7 +32,7 @@ end
 
 initial begin
 
-    $dumpfile("register16bit_tb.vcd");
+    $dumpfile("register4bit_tb.vcd");
     $dumpvars;
 
 end
@@ -42,10 +41,10 @@ initial begin // Test Cases
     
     #20;
 
-    D = 16'h0000; reset = 1'b0; #20;
-    D = 16'h0003; reset = 1'b0; #20;
-    D = 16'h0002; reset = 1'b0; #20;
-    D = 16'h000D; reset = 1'b0; #20;
+    D = 4'h0; reset = 1'b0; #20;
+    D = 4'h3; reset = 1'b0; #20;
+    D = 4'h2; reset = 1'b0; #20;
+    D = 4'hD; reset = 1'b0; #20;
     reset = 1'b1; #20;
     
     #20;    

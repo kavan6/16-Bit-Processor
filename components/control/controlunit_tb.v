@@ -16,12 +16,13 @@ reg clk;
 reg [3:0] OP;
 reg en;
 
+integer i;
 
 wire write_en;
 wire [3:0] alu_func;
-wire clk2, immed_sel, flag_en, mem_sel, mem_en, pc_sel;
+wire clk2, immed_sel, flag_en, mem_sel, mem_en, pc_sel, mar_sel;
 
-controlunit dut(.OP(OP), .en(en), .clk_out(clk2), .immed_sel(immed_sel), .w_en(write_en), .alu_func(alu_func), .flag_en(flag_en), .mem_sel(mem_sel), .mem_en(mem_en), .pc_sel(pc_sel));
+controlunit dut(.OP(OP), .en(en), .clk_out(clk2), .immed_sel(immed_sel), .w_en(write_en), .alu_func(alu_func), .flag_en(flag_en), .mem_sel(mem_sel), .mem_en(mem_en), .pc_sel(pc_sel), .mar_sel(mar_sel));
 
 
 initial begin
@@ -51,8 +52,9 @@ initial begin // Test Cases
     en = 1'b0; #20;
     en = 1'b1; #20;
 
-    OP = 4'h0; #20;
-    OP = 4'h1; #20;
+    for (i = 0; i < 16; i = i + 1) begin
+        OP = i; #20;
+    end
 
     $display("end simulation");
 
