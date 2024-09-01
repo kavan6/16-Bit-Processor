@@ -18,7 +18,7 @@ end
 
 mem_clk C0(.en(clk_en), .clk_out(clk));
 
-reg [15:0] memory [15:0];
+reg [15:0] memory [255:0];
 
 always @(posedge clk) begin
 

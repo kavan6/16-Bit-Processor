@@ -30,7 +30,7 @@ endmodule
 module register16bit(D, clk, en, reset, Q);
 
 input [15:0] D;
-input [15:0] en;
+input en;
 input clk, reset;
 
 output [15:0] Q;
@@ -41,7 +41,7 @@ generate
         dflipflop D (
             .D(D[i]),
             .clk(clk),
-            .en(en[i]),
+            .en(en),
             .reset(reset),
             .Q(Q[i])
         );
@@ -54,7 +54,7 @@ endmodule
 module register8bit(D, clk, en, Q, reset);
 
 input [7:0] D;
-input [7:0] en;
+input en;
 input clk, reset;
 
 output [7:0] Q;
@@ -65,7 +65,7 @@ generate
         dflipflop D (
             .D(D[i]),
             .clk(clk),
-            .en(en[i]),
+            .en(en),
             .reset(reset),
             .Q(Q[i])
         );
@@ -78,7 +78,7 @@ endmodule
 module register4bit(D, clk, en, Q, reset);
 
 input [3:0] D;
-input [3:0] en;
+input en;
 input clk, reset;
 
 output [3:0] Q;
@@ -89,7 +89,7 @@ generate
         dflipflop D (
             .D(D[i]),
             .clk(clk),
-            .en(en[i]),
+            .en(en),
             .reset(reset),
             .Q(Q[i])
         );
@@ -98,3 +98,4 @@ endgenerate
 
 
 endmodule
+
