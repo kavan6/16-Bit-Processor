@@ -51,11 +51,11 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     w_en = 1'b0;
                     alu_func <= 4'b0000; // pass through
                     mem_sel <= 1'b0;
-                    mem_en <= 1'b1;
+                    mem_en <= 1'b0;
                     pc_sel <= 1'b1;
                     read_write <= 1'bX;
                 end
-                // ADDS
+                // ADD
                 4'h1: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b0001; 
@@ -64,7 +64,7 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end
-                // SUBS
+                // SUB
                 4'h2: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b0010; 
@@ -91,25 +91,25 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end  
-                // LD
+                // AND
                 4'h5: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b0101;
                     mem_sel <= 1'b0;
-                    mem_en <= 1'b1;
+                    mem_en <= 1'b0;
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end  
-                // ST
+                // OR
                 4'h6: begin
-                    w_en <= 1'b0;
+                    w_en <= 1'b1;
                     alu_func <= 4'b0110;
-                    mem_sel <= 1'b1;
-                    mem_en <= 1'b1;
+                    mem_sel <= 1'b0;
+                    mem_en <= 1'b0;
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end  
-                // MOV
+                // XOR
                 4'h7: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b0111;
@@ -118,25 +118,25 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end
-                // ANDS + C
+                // LD
                 4'h8: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b1000;
-                    mem_sel <= 1'b0;
-                    mem_en <= 1'b0;
-                    pc_sel <= 1'b0;
-                    read_write <= 1'bX;
+                    mem_sel <= 1'b1;
+                    mem_en <= 1'b1;
+                    pc_sel <= 1'b1;
+                    read_write <= 1'b1;
                 end
-                // ADDS + C
+                // ST
                 4'h9: begin
-                    w_en <= 1'b1;
+                    w_en <= 1'b0;
                     alu_func <= 4'b1001;
                     mem_sel <= 1'b0;
-                    mem_en <= 1'b0;
-                    pc_sel <= 1'b0;
-                    read_write <= 1'bX;
+                    mem_en <= 1'b1;
+                    pc_sel <= 1'b1;
+                    read_write <= 1'b0;
                 end
-                // SUBS + C
+                // MOV
                 4'hA: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b1010;
@@ -145,25 +145,25 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end
-                // LSL + C
+                // BE
                 4'hB: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b1011;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
-                    pc_sel <= 1'b0;
+                    pc_sel <= 1'b1;
                     read_write <= 1'bX;
                 end
-                // LSR + C
+                // BNE
                 4'hC: begin
                     w_en <= 1'b1;
                     alu_func <= 4'b1100;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
-                    pc_sel <= 1'b0;
+                    pc_sel <= 1'b1;
                     read_write <= 1'bX;
                 end
-                // BNE
+                // BLT
                 4'hD: begin
                     w_en <= 1'b0;
                     alu_func <= 4'b1101;
@@ -172,22 +172,22 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
                     pc_sel <= 1'b1;
                     read_write <= 1'bX;
                 end
-                // BLT
+                // BGT
                 4'hE: begin
                     w_en <= 1'b0;
-                    alu_func <= 4'b1101;
+                    alu_func <= 4'b1110;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b1;
                     read_write <= 1'bX;
                 end
-                // BE
+                // CMP
                 4'hF: begin
                     w_en <= 1'b0;
-                    alu_func <= 4'b1101;
+                    alu_func <= 4'b1111;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
-                    pc_sel <= 1'b1;
+                    pc_sel <= 1'b0;
                     read_write <= 1'bX;
                 end
                 default: begin

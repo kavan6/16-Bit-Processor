@@ -11,7 +11,7 @@ INSTRUCTION SET:
 1000: LD
 1001: ST
 1010: MOV
-1011: BE
+1011: BEQ
 1100: BNE
 1101: BLT
 1110: BGT
@@ -28,4 +28,8 @@ INSTRUCTION TYPES:
 [ OPCODE ][ ADDRESS ] 
 [15:12][11:0]
 
+DOCUMENTATION:
 
+flags = 4 bits:
+[ c, s, v, z ]
+[ carry, negative(sign), overflow, zero ]
