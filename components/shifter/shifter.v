@@ -1,6 +1,6 @@
 // Created by Kavan Heppenstall, 27/08/2004
 
-`include "../multiplexer/multiplexer.v"
+// `include "../multiplexer/multiplexer.v"
 
 module leftshifter16bit(A, mag, Q);
 

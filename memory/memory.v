@@ -3,7 +3,7 @@
 module RAM(A, addr, en, rw, Q);
 
 input [15:0] A;
-input [3:0] addr;
+input [15:0] addr;
 input en, rw;
 
 output reg [15:0] Q;

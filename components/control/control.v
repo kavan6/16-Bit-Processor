@@ -1,17 +1,25 @@
 // Created by Kavan Heppenstall, 28/08/2024
 
-`include "../state_machine/state.v"
+`ifndef control_v
+`define control_v
 
-module controlunit(OP, en, clk_out, immed_sel, w_en, alu_func, flag_en, mem_sel, mem_en, pc_sel, mar_sel);
+`include "../components/state_machine/state.v"
+
+module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func, flag_en, mem_sel, mem_en, pc_sel, read_write);
 
     input [3:0] OP;
-    input en;
+    input en, immed_in, flag_in;
 
     output reg w_en;
     output reg [3:0] alu_func;
-    output reg immed_sel, flag_en, mem_sel, mem_en, pc_sel, mar_sel;
+    output reg mem_sel, mem_en, pc_sel, read_write;
+    output immed_sel, flag_en;
+
 
     output reg clk_out;
+
+    assign immed_sel = immed_in;
+    assign flag_en = flag_in;
 
     reg fde_en, fde_reset;
     wire [1:0] state;
@@ -40,195 +48,161 @@ module controlunit(OP, en, clk_out, immed_sel, w_en, alu_func, flag_en, mem_sel,
             case (OP)
                 // JMP
                 4'h0: begin
-                    immed_sel <= 1'b1;
                     w_en = 1'b0;
                     alu_func <= 4'b0000; // pass through
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b1;
                     pc_sel <= 1'b1;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // ADDS
                 4'h1: begin
-                    immed_sel <= 1'b0;
                     w_en <= 1'b1;
                     alu_func <= 4'b0001; 
-                    flag_en <= 1'b1;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // SUBS
                 4'h2: begin
-                    immed_sel <= 1'b0;
                     w_en <= 1'b1;
                     alu_func <= 4'b0010; 
-                    flag_en <= 1'b1;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // LSL
                 4'h3: begin
-                    immed_sel <= 1'b0;
                     w_en <= 1'b1;
                     alu_func <= 4'b0011;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // LSR
                 4'h4: begin
-                    immed_sel <= 1'b0;
                     w_en <= 1'b1;
                     alu_func <= 4'b0100;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end  
                 // LD
                 4'h5: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b0101;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b1;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b1;
+                    read_write <= 1'bX;
                 end  
                 // ST
                 4'h6: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b0;
                     alu_func <= 4'b0110;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b1;
                     mem_en <= 1'b1;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b1;
+                    read_write <= 1'bX;
                 end  
                 // MOV
                 4'h7: begin
-                    immed_sel <= 1'b0;
                     w_en <= 1'b1;
                     alu_func <= 4'b0111;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // ANDS + C
                 4'h8: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b1000;
-                    flag_en <= 1'b1;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // ADDS + C
                 4'h9: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b1001;
-                    flag_en <= 1'b1;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // SUBS + C
                 4'hA: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b1010;
-                    flag_en <= 1'b1;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // LSL + C
                 4'hB: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b1011;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // LSR + C
                 4'hC: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b1;
                     alu_func <= 4'b1100;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b0;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // BNE
                 4'hD: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b0;
                     alu_func <= 4'b1101;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b1;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // BLT
                 4'hE: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b0;
                     alu_func <= 4'b1101;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b1;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 // BE
                 4'hF: begin
-                    immed_sel <= 1'b1;
                     w_en <= 1'b0;
                     alu_func <= 4'b1101;
-                    flag_en <= 1'b0;
                     mem_sel <= 1'b0;
                     mem_en <= 1'b0;
                     pc_sel <= 1'b1;
-                    mar_sel <= 1'b0;
+                    read_write <= 1'bX;
                 end
                 default: begin
-                    immed_sel <= 1'bX;
                     w_en <= 1'bX;
                     alu_func <= 4'bXXXX;
-                    flag_en <= 1'bX;
                     mem_sel <= 1'bX;
                     mem_en <= 1'bX;
                     pc_sel <= 1'bX;
-                    mar_sel <= 1'bX;
+                    read_write <= 1'bX;
                 end
             endcase
         end
 
     end
 
-
-
 endmodule
+
+`endif
