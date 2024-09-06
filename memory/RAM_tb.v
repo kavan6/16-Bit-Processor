@@ -14,7 +14,7 @@ reg clk;
 // I/Os
 
 reg [15:0] A;
-reg [3:0] addr;
+reg [15:0] addr;
 reg en, rw;
 
 wire [15:0] Q;
@@ -46,14 +46,15 @@ initial begin // Test Cases
     
     #20;
 
-    A = 16'h0000; addr = 4'h0; en = 1'b0; rw = 1'b0; #20;
-    A = 16'hABCD; addr = 4'h0; en = 1'b1; rw = 1'b0; #20;
-    A = 16'hFFEE; addr = 4'h1; en = 1'b1; rw = 1'b0; #20;
-    A = 16'hEEEE; addr = 4'h4; en = 1'b1; rw = 1'b0; #20;
-    A = 16'h0000; addr = 4'h1; en = 1'b1; rw = 1'b1; #20;
-    A = 16'h0000; addr = 4'h0; en = 1'b1; rw = 1'b1; #20;
-    A = 16'h0000; addr = 4'h4; en = 1'b1; rw = 1'b1; #20;
-    A = 16'h0000; addr = 4'h0; en = 1'b0; rw = 1'b0; #20;
+    A = 16'h0000; addr = 16'h0000; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h0001; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h0002; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h0003; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h0004; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h000F; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0000; addr = 16'h0011; en = 1'b1; rw = 1'b1; #20;
+    A = 16'h0F0F; addr = 16'h0011; en = 1'b1; rw = 1'b0; #20;
+    A = 16'h0000; addr = 16'h0011; en = 1'b1; rw = 1'b1; #20;
 
 
     $display("end simulation");

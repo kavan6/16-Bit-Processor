@@ -7,14 +7,16 @@
 module tb;
 
 parameter PERIOD = 10;
-parameter RUNTIME = 1000000;
+parameter RUNTIME = 100000;
 
 reg clk;
 
 // I/Os
 
+reg reset;
+reg pc_reset;
 
-datapath dut();
+datapath dut(.reset(reset), .pc_reset(pc_reset));
 
 
 initial begin
@@ -39,7 +41,11 @@ end
 
 initial begin // Test Cases
     
+    #20;
 
+    pc_reset = 1'b0; #20;
+    pc_reset = 1'b1; #20;
+    pc_reset = 1'b0; #20;
 
     $display("end simulation");
 

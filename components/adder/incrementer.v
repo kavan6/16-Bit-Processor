@@ -7,10 +7,8 @@ input clk;
 
 output reg [15:0] Q;
 
-always @(posedge clk) begin
-    
+always @(A) begin
     Q <= A + 1;
-
 end
 
 endmodule

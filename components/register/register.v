@@ -13,7 +13,7 @@ always @(posedge clk) begin
 
         if (reset) begin
         
-        Q <= 1'b0;
+            Q <= 1'b0;
 
         end else begin
             

@@ -1,7 +1,15 @@
 // Created by Kavan Heppenstall, 05/09/2024
 
+`ifdef alu_v
+`define alu_v
+
 `include "../adder/adder.v"
 `include "../multiplexer/multiplexer.v"
+
+`endif
+
+`ifndef alu_V
+`define alu_v
 
 module alu(func, OP0, OP1, flag_en, flag_in, Q, flag_out);
 
@@ -190,3 +198,5 @@ end
 
 
 endmodule
+
+`endif

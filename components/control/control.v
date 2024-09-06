@@ -27,7 +27,10 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
     fdemachine FDE(.clk(clk_out), .en(fde_en), .reset(fde_reset), .state(state));
 
     initial begin
-        clk_out = 0;
+        clk_out = 1'b0;
+        pc_sel = 1'b0;
+        read_write = 1'b1;
+        mem_en = 1'b1;
     end
 
     always begin
