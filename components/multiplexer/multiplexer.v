@@ -27,6 +27,19 @@ assign Q =  (~sel[1] & ~sel[0]) ? A:
 
 endmodule
 
+module multiplexer4bit(A, B, sel, Q);
+
+input [3:0] A, B;
+input sel;
+
+output [3:0] Q;
+
+assign Q =  (sel) ? A:
+            (~sel) ? B:
+            4'bXXXX;
+
+endmodule
+
 module multiplexer16bit(A, B, sel, Q);
 
 input [15:0] A, B;

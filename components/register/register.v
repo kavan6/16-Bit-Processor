@@ -6,13 +6,12 @@ input D, clk, en, reset;
 
 output reg Q;
 
-
 always @(posedge clk) begin
     
     if (en) begin
 
         if (reset) begin
-        
+
             Q <= 1'b0;
 
         end else begin

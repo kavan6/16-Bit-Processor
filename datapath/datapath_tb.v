@@ -15,8 +15,10 @@ reg clk;
 
 reg reset;
 reg pc_reset;
+reg reg_reset;
+reg flag_reset;
 
-datapath dut(.reset(reset), .pc_reset(pc_reset));
+datapath dut(.reset(reset), .pc_reset(pc_reset), .reg_reset(reg_reset), .flag_reset(flag_reset));
 
 
 initial begin
@@ -43,9 +45,9 @@ initial begin // Test Cases
     
     #20;
 
-    pc_reset = 1'b0; #20;
-    pc_reset = 1'b1; #20;
-    pc_reset = 1'b0; #20;
+    flag_reset = 1'b0; pc_reset = 1'b0; reg_reset = 1'b0; #20;
+    flag_reset = 1'b1; pc_reset = 1'b1; reg_reset = 1'b1; #20;
+    flag_reset = 1'b0; pc_reset = 1'b0; reg_reset = 1'b0; #20;
 
     $display("end simulation");
 

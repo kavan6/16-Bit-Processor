@@ -47,7 +47,7 @@ end
 initial begin // Test Cases
     
     #20;
-    DEST = 3'b000; SRC0 = 3'b000; SRC1 = 3'b000; w_in = 16'h0000; w_en = 1'b0; reset = 1'b0; #20;
+    DEST = 3'b000; SRC0 = 3'b000; SRC1 = 3'b000; w_in = 16'h0000; w_en = 1'b0; reset = 1'b1; #20;
     DEST = 3'b001; SRC0 = 3'b000; SRC1 = 3'b000; w_in = 16'hAAAA; w_en = 1'b1; reset = 1'b0; #20;
     DEST = 3'b010; SRC0 = 3'b000; SRC1 = 3'b000; w_in = 16'hBBBB; w_en = 1'b0; reset = 1'b0; #20;
     DEST = 3'b011; SRC0 = 3'b000; SRC1 = 3'b000; w_in = 16'hCCCC; w_en = 1'b1; reset = 1'b0; #20;

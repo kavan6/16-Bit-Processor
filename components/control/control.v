@@ -31,6 +31,8 @@ module controlunit(OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, alu_func
         pc_sel = 1'b0;
         read_write = 1'b1;
         mem_en = 1'b1;
+        w_en = 1'b0;
+        mem_sel = 1'b0;
     end
 
     always begin
