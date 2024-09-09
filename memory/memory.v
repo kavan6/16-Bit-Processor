@@ -1,10 +1,9 @@
 // Created by Kavan Heppenstall, 30/08/2024
 
-module RAM(A, addr, en, rw, Q);
+module ROM(addr, en, Q);
 
-input [15:0] A;
 input [15:0] addr;
-input en, rw;
+input en;
 
 reg [15:0] memory [511:0];
 
@@ -54,6 +53,75 @@ initial begin
     $fclose(mem_file);
 
 end
+
+mem_clk C1(.en(clk_en), .clk_out(clk));
+
+
+always @(posedge clk) begin
+
+    if(en) begin
+        Q <= memory[addr];
+    end
+
+end
+
+
+endmodule
+
+module RAM(A, addr, en, rw, Q);
+
+input [15:0] A;
+input [15:0] addr;
+input en, rw;
+
+reg [15:0] memory [511:0];
+
+output reg [15:0] Q;
+
+reg clk_en;
+
+wire clk;
+
+// reg[8*8-1:0] str;
+// reg res;
+// integer mem_file;
+// integer scan_file;
+// integer count;
+
+// initial begin
+//     clk_en = 1;
+//     count = 0;
+
+//     mem_file = $fopen("memory.txt", "r");
+//     if (mem_file == 0) begin
+//         mem_file = $fopen("../memory/memory.txt", "r");
+//         if (mem_file == 0) begin
+//             $display("memory file handle was NULL");
+//             $finish;
+//         end
+//     end
+
+//     while (! $feof(mem_file)) begin
+        
+//         res = $fgets(str, mem_file);
+
+//         if(res) begin
+            
+//             scan_file = $sscanf(str, "%h", memory[count]);
+
+//             if (scan_file == 1) begin
+//                 $display("Loaded Memory[%0d]: %h", count, memory[count]);
+//                 count = count + 1;
+//             end else begin
+//                 $display("Error reading line %0d", count);
+//             end
+
+//         end
+//     end
+
+//     $fclose(mem_file);
+
+// end
 
 mem_clk C0(.en(clk_en), .clk_out(clk));
 
