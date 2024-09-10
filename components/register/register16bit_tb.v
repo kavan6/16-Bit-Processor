@@ -11,7 +11,7 @@ parameter RUNTIME = 100000;
 reg clk;
 
 reg [15:0] D;
-reg [15:0] en;
+reg en;
 reg reset;
 
 wire [15:0] Q;
@@ -42,12 +42,14 @@ initial begin // Test Cases
     
     #20;
 
-    D = 16'h0000; reset = 1'b0; #20;
-    D = 16'h0003; reset = 1'b0; #20;
-    D = 16'h0002; reset = 1'b0; #20;
-    D = 16'h000D; reset = 1'b0; #20;
+    D = 16'h0000; en = 1'b0; reset = 1'b0; #20;
+    D = 16'h0003; en = 1'b1; reset = 1'b0; #20;
+    D = 16'h0002; en = 1'b0; reset = 1'b0; #20;
+    D = 16'h000D; en = 1'b0; reset = 1'b0; #20;
+    D = 16'hXXXX;
     reset = 1'b1; #20;
-    
+    reset = 1'b0; #20;
+
     #20;    
 
 

@@ -1,35 +1,45 @@
 //Created by Kavan Heppenstall, 26/08/2024
 
-module fdemachine(clk, en, reset, state);
+module fdemachine(clk, en, reset, fetch, decode, execute);
 
 input clk, en, reset;
 
-output reg [1:0] state;
+output reg fetch, decode, execute;
 
-localparam fetch = 2'b00;
-localparam decode = 2'b01;
-localparam execute = 2'b10;
-localparam memory = 2'b11;
+reg [2:0] state;
+
+initial begin
+    state <= 2'b00;
+end
 
 always @(posedge clk) begin
     
     if (en) begin
 
         if (reset) begin
-            state <= fetch;
+            fetch <= 1'b0;
+            decode <= 1'b0;
+            execute <= 1'b0;
+            state <= 2'b00;
         end else begin
             case (state)
-                fetch: begin
-                    state <= decode;
+                2'b00: begin
+                    execute <= 1'b0;
+                    fetch <= 1'b1;
+                    state <= 2'b01;
                 end
-                decode: begin
-                    state <= execute;
+                2'b01: begin
+                    fetch <= 1'b0;
+                    decode <= 1'b1;
+                    state <= 2'b10;
                 end
-                execute: begin
-                    state <= fetch;
+                2'b10: begin
+                    decode <= 1'b0;
+                    execute <= 1'b1;
+                    state <= 2'b00;
                 end
 
-                default: state <= fetch;
+                default: state <= 2'bXX;
             endcase
         end
 

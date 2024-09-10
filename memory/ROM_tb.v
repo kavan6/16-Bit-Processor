@@ -1,21 +1,24 @@
-// Created by Kavan Heppenstall, 05/08/2024
+// Created by Kavan Heppenstall, 09/09/2024
 
 `timescale 1ns/1ns
-`include "datapath.v"
+`include "memory.v"
 
 
 module tb;
 
 parameter PERIOD = 10;
-parameter RUNTIME = 100000;
+parameter RUNTIME = 1000000;
 
 reg clk;
 
 // I/Os
 
-reg init;
+reg [15:0] addr;
+reg en;
 
-datapath dut(.init(init));
+wire [15:0] Q;
+
+ROM dut(addr, en, Q);
 
 
 initial begin
@@ -33,7 +36,7 @@ end
 
 initial begin
 
-    $dumpfile("datapath_tb.vcd");
+    $dumpfile("ROM_tb.vcd");
     $dumpvars;
 
 end
@@ -41,10 +44,10 @@ end
 initial begin // Test Cases
     
     #20;
-
-    init = 1'b0; #20;
-    init = 1'b1; #20;
-    init = 1'b0; #20;
+    addr = 16'h0000; en = 1'b1; #20;
+    addr = 16'h0001; en = 1'b1; #20;
+    addr = 16'h0002; en = 1'b1; #20;
+    addr = 16'h000F; en = 1'b1; #20;
 
     $display("end simulation");
 

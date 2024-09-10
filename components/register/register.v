@@ -8,17 +8,16 @@ output reg Q;
 
 always @(posedge clk) begin
     
+    if (reset) begin
+
+        Q <= 1'b0;
+
+    end
+
     if (en) begin
 
-        if (reset) begin
+        Q <= D;
 
-            Q <= 1'b0;
-
-        end else begin
-            
-            Q <= D;
-
-        end
     end
 
 end
@@ -85,6 +84,30 @@ output [3:0] Q;
 genvar i;
 generate
     for (i = 0; i < 4; i = i + 1) begin : dff
+        dflipflop D (
+            .D(D[i]),
+            .clk(clk),
+            .en(en),
+            .reset(reset),
+            .Q(Q[i])
+        );
+    end
+endgenerate
+
+
+endmodule
+
+module register3bit(D, clk, en, Q, reset);
+
+input [2:0] D;
+input en;
+input clk, reset;
+
+output [2:0] Q;
+
+genvar i;
+generate
+    for (i = 0; i < 3; i = i + 1) begin : dff
         dflipflop D (
             .D(D[i]),
             .clk(clk),

@@ -23,19 +23,24 @@ output reg [3:0] flag_out;
 
 reg adder;
 wire [15:0] adder_out;
-reg [15:0] other;
 
 // multiplexer16bit M0(.A(adder_out), .B(other), .sel(adder), .Q(Q));
 
 // adder16bit ADDER(.A(OP0), .B(OP1), .C_in(flag_in[3]), .S(Q), .C_out(flag_out[3]));
 
-always @(*) begin
+always @(func, OP0, OP1) begin
 
     case (func)
         // JMP
         4'b0000: begin
-            adder <= 1'b0;
-            other <= OP0;
+            if (flag_en) begin
+                {flag_out[3], Q} <= {1'b0, OP0} + {1'b0, OP1} + {flag_in[3]};
+                {flag_out[2]} <= (Q[15] == 1'b1);           
+                {flag_out[1]} <= ((OP0[15] == OP1[15]) && (Q[15] != OP0[15]));
+                {flag_out[0]} <= (Q == 16'h0000);
+            end else begin
+                {Q} <= {1'b0, OP0} + {1'b0, OP1} + {flag_in[3]};
+            end
         end
         // ADD
         4'b0001: begin
