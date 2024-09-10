@@ -19,11 +19,11 @@ module datapath(init);
 
 input init;
 
-wire [15:0] D_MEMORY, D_DATA, I_MEMORY, PC_OUT, PC_OUT_OUT, PC_INT, PC_IN, PC_IN_OUT, PC_PLUS1, ALU_OUT, WRITE_IN, WRITE_IN_OUT, I_IN,I_IN_OUT, OP0, OP1, IMMED_SXT, IMMED_SXT_OUT;
+wire [15:0] D_MEMORY, D_DATA, I_MEMORY, PC_OUT, PC_OUT_OUT, PC_INT, PC_IN, PC_IN_OUT, PC_PLUS1, ALU_OUT, WRITE_IN, WRITE_IN_OUT, I_IN,I_IN_OUT, OP0, OP1, DEST_OUT, IMMED_SXT, IMMED_SXT_OUT;
 
 wire [3:0] OP, IMMED, ALU_FUNC, FLAG_RESET, FLAG_IN, FLAG_OUT;
 
-wire [2:0] DEST, SRC0, SRC1, DEST_OUT, SRC0_OUT, SRC1_OUT;
+wire [2:0] DEST, SRC0, SRC1;
 
 wire CLK, FLAG_EN, IMMED_SEL, WRITE_SEL, WRITE_EN, PC_SEL, READ_WRITE, D_EN, I_SEL, F_EN, FETCH, DECODE, EXECUTE;
 
@@ -66,13 +66,13 @@ instructiondecoder DECODER(.A(I_IN_OUT), .OP(OP), .Q0(SRC0), .Q1(SRC1), .DEST(DE
 
 multiplexer16bit WRITE_MUX(.A(D_MEMORY), .B(ALU_OUT), .sel(WRITE_SEL), .Q(WRITE_IN));
 
-regfile REGISTER_FILE(.DEST(DEST), .SRC0(SRC0), .SRC1(SRC1), .clk(CLK), .w_in(WRITE_IN_OUT), .w_en(WRITE_EN), .reset(init), .op0(OP0), .op1(D_DATA));
+regfile REGISTER_FILE(.DEST(DEST), .SRC0(SRC0), .SRC1(SRC1), .clk(CLK), .w_in(WRITE_IN_OUT), .w_en(WRITE_EN), .reset(init), .op0(OP0), .op1(D_DATA), .dest_out(DEST_OUT));
 
 multiplexer16bit IMMED_MUX(.A(IMMED_SXT), .B(D_DATA), .sel(IMMED_SEL), .Q(OP1));
 
 alu ALU(.func(ALU_FUNC), .OP0(OP0), .OP1(OP1), .flag_en(FLAG_EN), .flag_in(FLAG_IN), .Q(ALU_OUT), .flag_out(FLAG_OUT));
 
-RAM RAM_MEMORY(.A(D_DATA), .addr(ALU_OUT), .en(D_EN), .rw(READ_WRITE), .Q(D_MEMORY));
+RAM RAM_MEMORY(.A(DEST_OUT), .addr(ALU_OUT), .en(D_EN), .rw(READ_WRITE), .Q(D_MEMORY));
 
 ROM ROM_MEMORY(.addr(PC_OUT), .en(1'b1), .Q(I_MEMORY));
 

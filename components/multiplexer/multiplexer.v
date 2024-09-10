@@ -54,12 +54,12 @@ assign Q =  (sel) ? A:
 endmodule
 
 
-module multiplexer8to2(A, B, C, D, E, F, G, H, sel0, sel1, Q0, Q1);
+module multiplexer8to3(A, B, C, D, E, F, G, H, sel0, sel1, sel2, Q0, Q1, Q2);
 
 input [15:0] A, B, C, D, E, F, G, H;
-input [2:0] sel0, sel1;
+input [2:0] sel0, sel1, sel2;
 
-output [15:0] Q0, Q1;
+output [15:0] Q0, Q1, Q2;
 
 assign Q0 =  (sel0 == 3'b111) ? A:
             (sel0 == 3'b110) ? B:
@@ -80,5 +80,15 @@ assign Q1 =  (sel1 == 3'b111) ? A:
             (sel1 == 3'b001) ? G:
             (sel1 == 3'b000) ? H:
             16'hXXXX;            
+
+assign Q2 =  (sel2 == 3'b111) ? A:
+            (sel2 == 3'b110) ? B:
+            (sel2 == 3'b101) ? C:
+            (sel2 == 3'b100) ? D:
+            (sel2 == 3'b011) ? E:
+            (sel2 == 3'b010) ? F:
+            (sel2 == 3'b001) ? G:
+            (sel2 == 3'b000) ? H:
+            16'hXXXX;   
 
 endmodule

@@ -144,7 +144,7 @@ module controlunit(init, OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, al
                     alu_func <= 4'b1000;
                     write_sel <= 1'b1;
                     mem_en <= 1'b1;
-                    pc_sel <= 1'b1;
+                    pc_sel <= 1'b0;
                     read_write <= 1'b1;
                 end
                 // ST
@@ -153,7 +153,7 @@ module controlunit(init, OP, en, immed_in, flag_in, clk_out, immed_sel, w_en, al
                     alu_func <= 4'b1001;
                     write_sel <= 1'b0;
                     mem_en <= 1'b1;
-                    pc_sel <= 1'b1;
+                    pc_sel <= 1'b0;
                     read_write <= 1'b0;
                 end
                 // MOV
