@@ -11,12 +11,12 @@
 `ifndef alu_V
 `define alu_v
 
-module alu(func, OP0, OP1, flag_en, flag_in, Q, flag_out);
+module alu(func, OP0, OP1, clk, flag_en, flag_in, Q, flag_out);
 
 input wire [3:0] func;
 input wire [15:0] OP0, OP1;
 input wire [3:0] flag_in;
-input wire flag_en;
+input wire flag_en, clk;
 
 output reg [15:0] Q;
 output reg [3:0] flag_out;
@@ -28,7 +28,7 @@ wire [15:0] adder_out;
 
 // adder16bit ADDER(.A(OP0), .B(OP1), .C_in(flag_in[3]), .S(Q), .C_out(flag_out[3]));
 
-always @(func, OP0, OP1) begin
+always @(func, posedge clk) begin
 
     case (func)
         // JMP

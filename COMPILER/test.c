@@ -1,5 +1,5 @@
 int main()
 {
-    return !~-15;
+    return 3*4;
 }
 

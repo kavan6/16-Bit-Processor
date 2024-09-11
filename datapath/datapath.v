@@ -42,7 +42,7 @@ register16bit FETCH_BARRIER0(.D(I_IN), .clk(CLK), .en(FETCH), .reset(init), .Q(I
 
 // register16bit EXECUTE_BARRIER0(.D(PC_OUT), .clk(CLK), .en(EXECUTE), .reset(init), .Q(PC_OUT_OUT));
 
-register16bit EXECUTE_BARRIER0(.D(WRITE_IN), .clk(CLK), .en(EXECUTE), .reset(init), .Q(WRITE_IN_OUT));
+//register16bit EXECUTE_BARRIER0(.D(WRITE_IN), .clk(CLK), .en(EXECUTE), .reset(init), .Q(WRITE_IN_OUT));
 
 
 // CONTROL
@@ -66,11 +66,11 @@ instructiondecoder DECODER(.A(I_IN_OUT), .OP(OP), .Q0(SRC0), .Q1(SRC1), .DEST(DE
 
 multiplexer16bit WRITE_MUX(.A(D_MEMORY), .B(ALU_OUT), .sel(WRITE_SEL), .Q(WRITE_IN));
 
-regfile REGISTER_FILE(.DEST(DEST), .SRC0(SRC0), .SRC1(SRC1), .clk(CLK), .w_in(WRITE_IN_OUT), .w_en(WRITE_EN), .reset(init), .op0(OP0), .op1(D_DATA), .dest_out(DEST_OUT));
+regfile REGISTER_FILE(.DEST(DEST), .SRC0(SRC0), .SRC1(SRC1), .clk(CLK), .w_in(WRITE_IN), .w_en(WRITE_EN), .reset(init), .op0(OP0), .op1(D_DATA), .dest_out(DEST_OUT));
 
 multiplexer16bit IMMED_MUX(.A(IMMED_SXT), .B(D_DATA), .sel(IMMED_SEL), .Q(OP1));
 
-alu ALU(.func(ALU_FUNC), .OP0(OP0), .OP1(OP1), .flag_en(FLAG_EN), .flag_in(FLAG_IN), .Q(ALU_OUT), .flag_out(FLAG_OUT));
+alu ALU(.func(ALU_FUNC), .OP0(OP0), .OP1(OP1), .clk(DECODE), .flag_en(FLAG_EN), .flag_in(FLAG_IN), .Q(ALU_OUT), .flag_out(FLAG_OUT));
 
 RAM RAM_MEMORY(.A(DEST_OUT), .addr(ALU_OUT), .en(D_EN), .rw(READ_WRITE), .Q(D_MEMORY));
 

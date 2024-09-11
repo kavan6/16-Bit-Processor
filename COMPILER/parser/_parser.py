@@ -89,8 +89,6 @@ class Parser:
 
         # expression -> <term> { ('+' | '-') <term> }
 
-        token = self.pop_next_token()
-
         term = self.parse_term()
 
         next = self.peek_next_token()
@@ -104,7 +102,44 @@ class Parser:
 
         return term       
         
-    
+    def parse_factor(self):
+
+        # factor -> '(' <exp> ')' | <unaryOp> <factor> | <int> 
+
+        token = self.pop_next_token()
+
+        if token == '(':
+            exp = self.parse_exp()
+            token = self.pop_next_token()
+            if token != ')':
+                raise SyntaxError("Expected )")
+            return exp
+                      
+        elif token.isdigit():
+            return Const(int(token))
+        else:
+            op = self.check_op(token)
+            factor = self.parse_factor()
+            return UnaryOp(op, factor)
+
+    def parse_term(self):
+
+        # term -> <factor> { ('*' | '/') <factor> }
+
+        factor = self.parse_factor()
+
+        next = self.peek_next_token()
+
+        while next == '*' or next == '/':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_factor = self.parse_factor()
+            factor = BinaryOp(op, factor, next_factor)
+            next = self.peek_next_token()
+
+        return factor
+
+
     def parse_unary(self, token):
 
         if token == '~' or token == '!' or token == '-':
@@ -123,3 +158,4 @@ class Parser:
         else:
             return 
             raise SyntaxError("Invalid operator expected: (+, *, /, !, -, ~)")
+        

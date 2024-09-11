@@ -36,7 +36,7 @@ output_soruce = "output/machine_code.txt"
 with open(output_soruce, 'w') as outfile:
     for line in machine_code:
         outfile.write(line + "\n")
-    outfile.write("end\n")
+    outfile.write("finish\n")
 
     outfile.close()
 
