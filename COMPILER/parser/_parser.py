@@ -13,20 +13,9 @@ class Parser:
         self.current_token = 0
         self.program = self.parse_program()
 
-
-    def get_next_token(self):
-
-        if self.current_token < len(self.tokens):
-            token = self.tokens[self.current_token]
-            self.current_token += 1
-            return token
-        else:
-            return None
-        
-    def check_next_token(self):
-
-        if self.current_token < len(self.tokens):
-            return self.tokens[self.current_token]
+    def peek_next_token(self):
+        if len(self.tokens) > 0:
+            return self.tokens[0]
         else:
             return None
 
@@ -80,7 +69,7 @@ class Parser:
     
     def parse_statement(self):
 
-        # statement -> "return" <exp> ";" | "return" <exp> <operator> <exp> ";"
+        # statement -> <variable> '=' <exp> | "return" <exp> ";"
 
         token = self.pop_next_token()
 
@@ -98,11 +87,39 @@ class Parser:
     
     def parse_exp(self):
 
-        # expression -> <int>
+        # expression -> <term> { ('+' | '-') <term> }
 
         token = self.pop_next_token()
 
-        if not token.isdigit():
-            raise SyntaxError("Expected a constant (int)")
+        term = self.parse_term()
+
+        next = self.peek_next_token()
+
+        while next == '+' or next == '-':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term       
         
-        return Const(int(token))
+    
+    def parse_unary(self, token):
+
+        if token == '~' or token == '!' or token == '-':
+            return token
+        else:
+            return 
+            raise SyntaxError("Expected unary operator (~, !, -)")
+    
+    def check_op(self, token):
+
+        # binary_op -> '+' | '*' | '/'
+        # unary_op -> '~' | '!' | '-'
+
+        if token == '+' or token == '*' or token == '/' or token == '~' or token == '!' or token == '-':
+            return token      
+        else:
+            return 
+            raise SyntaxError("Invalid operator expected: (+, *, /, !, -, ~)")

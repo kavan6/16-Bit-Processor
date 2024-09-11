@@ -8,7 +8,7 @@ class Tokenizer:
 
     def __init__(self):
         self.tokens = -1
-        self.token_re = r"[0-9]+|[a-zA-Z]\w*|int|return|[{}\[\]\(\);]"
+        self.token_re = r"[0-9]+|[a-zA-Z]\w*|int|return|[{}\[\]\(\);\-~!\+\*\/]"
 
     def Tokenize(self, sys_args):
 

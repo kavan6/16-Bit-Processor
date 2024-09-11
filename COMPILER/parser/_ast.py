@@ -1,5 +1,26 @@
 # Created by Kavan Heppenstall, 10/09/2024
 
+class BinaryOp:
+
+    def __init__(self, _operator, _exp0, _exp1):
+        self._operator = _operator
+        self._exp0 = _exp0
+        self._exp1 = _exp1
+
+    def __repr__(self) -> str:
+        return f"BinaryOp({self._operator, self._exp0, self._exp1})"
+
+
+class UnaryOp:
+
+    def __init__(self, _operator, _exp):
+        self._operator = _operator
+        self._exp = _exp
+
+    def __repr__(self) -> str:
+        return f"UnaryOp({self._operator, self._exp})"
+
+
 class Const:
 
     def __init__(self, _integer):
@@ -36,7 +57,8 @@ class Program:
 class AST:
     
     def __init__(self):
-        self.exp = Const(0)
+        # example
+        self.exp = UnaryOp('~', Const(0)) | Const(0)
         self.statement = Ret(self.exp)
         self.function_declaration = Function("my_func", self.statement)
         self.program = Program(self.function_declaration)
