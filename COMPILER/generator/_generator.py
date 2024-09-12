@@ -42,11 +42,13 @@ class Generator:
 
         self.generate_code(node._statement)
 
+        self.output.append(f"end:")
+
     def visit_return(self, node):
 
         self.generate_code(node._exp)
 
-        self.output.append(f"JMP {self._func_label}")
+        self.output.append(f"JMP end")
 
     def visit_constant(self, node):
 
@@ -99,7 +101,6 @@ class Generator:
         elif node._operator == '-':
             self.output.append(f"SUB R1 R1 R6")
         elif node._operator == '*':
-            print("MULTIPLY")
             
             self.output.append(f"MOV R0 R7 #0")
 

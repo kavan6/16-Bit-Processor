@@ -18,6 +18,7 @@ reg res;
 integer mem_file;
 integer scan_file;
 integer count;
+integer i;
 
 initial begin
     clk_en = 1;
@@ -51,6 +52,7 @@ initial begin
     end
 
     $fclose(mem_file);
+
 
 end
 

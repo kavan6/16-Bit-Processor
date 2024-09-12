@@ -29,7 +29,7 @@ wire [15:0] adder_out;
 
 // adder16bit ADDER(.A(OP0), .B(OP1), .C_in(flag_in[3]), .S(Q), .C_out(flag_out[3]));
 
-always @(func, posedge clk) begin
+always @(posedge clk, func, OP1) begin
 
     case (func)
         // JMP
@@ -173,7 +173,6 @@ always @(func, posedge clk) begin
         4'b1011: begin
             if (flag_out[0] == 1'b1) begin
                 {Q} <= {OP1};
-                $display("OP1: %h, flag_in: %b", OP1, flag_in);
                 b_out <= 1'b1;
             end else begin
                 b_out <= 1'b0;
@@ -184,7 +183,7 @@ always @(func, posedge clk) begin
             if (flag_out[0] == 1'b0) begin
                 Q <= OP1;
                 b_out <= 1'b1;
-            end else begin
+            end else begin        
                 b_out <= 1'b0;
             end
         end

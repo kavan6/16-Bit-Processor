@@ -25,6 +25,6 @@ assign IMMEDIATE_B = A[11:1];
 
 assign flag_en = A[1];
 assign immed_sel = A[0];
-assign b_immed_sel = ((A[15:12] == 4'b1011) | (A[15:12] == 4'b1100) | (A[15:12] == 4'b1101) | (A[15:12] == 4'b1110));
+assign b_immed_sel = ((A[15:12] == 4'b1011) | (A[15:12] == 4'b1100) | (A[15:12] == 4'b1101) | (A[15:12] == 4'b1110) | (A[15:12] == 4'b0000));
 
 endmodule
