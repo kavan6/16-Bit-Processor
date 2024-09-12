@@ -18,6 +18,7 @@ class Assembler:
             "BEQ" : "1011",
             "BNE" : "1100",
             "BLT" : "1101",
+            "BGT" : "1110",
             "CMP" : "1111"
         }
         self._label_map = {}
@@ -51,13 +52,7 @@ class Assembler:
             instruction = instruction.replace(']', '')
             if ':' in instruction:
                 continue
-            elif 'JMP' in instruction:
-                label = instruction.split(' ')[1]
-                if label in self._label_map:
-                    code = self._op_map['JMP'] + self.get_address_code(self._label_map[label])
-                else:
-                    raise ValueError(f"Undefined label {label}")
-            elif 'ADD' in instruction or 'SUB' in instruction or 'LSL' in instruction or 'LSR' in instruction or 'AND' in instruction or 'OR' in instruction or 'XOR' in instruction or 'CMP' in instruction:
+            elif 'ADD' in instruction or 'SUB' in instruction or 'LSL' in instruction or 'LSR' in instruction or 'AND' in instruction or 'OR' in instruction or 'XOR' in instruction:
                 parts = instruction.split(' ')
 
                 OP = self._op_map[parts[0][0:3]]
@@ -114,12 +109,28 @@ class Assembler:
                     code = OP + REG0 + REG1 + self.get_immed_code(parts[3].strip('#')) + flag_en + immed_en
                 else:
                     raise ValueError("MOV instruction missing immediate")
-            elif 'BEQ' in instruction or 'BNE' in instruction or 'BLT' in instruction:
+            elif 'BEQ' in instruction or 'BNE' in instruction or 'BLT' in instruction or 'BGT' in instruction or 'JMP' in instruction:
                 label = instruction.split(' ')[1]
                 if label in self._label_map:
-                    code = self._op_map['JMP'] + self.get_address_code(self._label_map[label])
+                    code = self._op_map[instruction.split(' ')[0]] + self.get_address_code(self._label_map[label]) + '1'
                 else:
                     raise ValueError(f"Undefined label {label}")
+            elif 'CMP' in instruction:
+                parts = instruction.split(' ')
+
+                OP = self._op_map['CMP']
+                REG0 = self.get_reg_code(parts[1])
+                REG1 = self.get_reg_code(parts[2])
+
+                immed_en = '0'
+                flag_en = '1'
+                
+                if '#' in parts[3]:
+                    immed_en = '1'
+                    code = OP + REG0 + REG1 + self.get_immed_code(parts[3].strip('#')) + flag_en + immed_en
+                else:
+                    REG2 = self.get_reg_code(parts[3])
+                    code = OP + REG0 + REG1 + REG2 + '0' + flag_en + immed_en
 
             m_code.append(code)
             address += 1
@@ -136,4 +147,4 @@ class Assembler:
         return format(int(immed), '04b')
 
     def get_address_code(self, address):
-        return format(address, '012b')
+        return format(address, '011b')

@@ -15,10 +15,11 @@ reg clk;
 
 reg [15:0] A;
 
-wire [3:0] OP, Q0, Q1, DEST;
+wire [3:0] OP;
+wire [2:0] DEST, Q0, Q1;
+wire [1:0] immed_sel;
 
-
-instructiondecoder dut(.A(A), .OP(OP), .Q0(Q0), .Q1(Q1), .DEST(DEST));
+instructiondecoder dut(.A(A), .OP(OP), .Q0(Q0), .Q1(Q1), .DEST(DEST), .immed_sel(immed_sel));
 
 
 initial begin

@@ -7,83 +7,100 @@
 :vpi_module "C:\iverilog\lib\ivl\vhdl_textio.vpi";
 :vpi_module "C:\iverilog\lib\ivl\v2005_math.vpi";
 :vpi_module "C:\iverilog\lib\ivl\va_math.vpi";
-S_000001ed940a5030 .scope module, "tb" "tb" 2 7;
+S_000001f9be15bd50 .scope module, "tb" "tb" 2 7;
  .timescale -9 -9;
-P_000001ed94083240 .param/l "PERIOD" 0 2 9, +C4<00000000000000000000000000001010>;
-P_000001ed94083278 .param/l "RUNTIME" 0 2 10, +C4<00000000000011110100001001000000>;
-v000001ed94082850_0 .var "A", 15 0;
-v000001ed940828f0_0 .net "DEST", 3 0, L_000001ed941008e0;  1 drivers
-v000001ed94082990_0 .net "OP", 3 0, L_000001ed94100840;  1 drivers
-v000001ed94082a30_0 .net "Q0", 3 0, L_000001ed940b1550;  1 drivers
-v000001ed94082ad0_0 .net "Q1", 3 0, L_000001ed940b1690;  1 drivers
-v000001ed94082b70_0 .var "clk", 0 0;
-S_000001ed940a7a50 .scope module, "dut" "instructiondecoder" 2 21, 3 3 0, S_000001ed940a5030;
+P_000001f9be3b8490 .param/l "PERIOD" 0 2 9, +C4<00000000000000000000000000001010>;
+P_000001f9be3b84c8 .param/l "RUNTIME" 0 2 10, +C4<00000000000011110100001001000000>;
+v000001f9be419b10_0 .var "A", 15 0;
+v000001f9be4199d0_0 .net "DEST", 2 0, L_000001f9be4197f0;  1 drivers
+v000001f9be4196b0_0 .net "OP", 3 0, L_000001f9be419110;  1 drivers
+v000001f9be419c50_0 .net "Q0", 2 0, L_000001f9be419d90;  1 drivers
+v000001f9be4192f0_0 .net "Q1", 2 0, L_000001f9be419ed0;  1 drivers
+v000001f9be419f70_0 .var "clk", 0 0;
+v000001f9be419cf0_0 .net "immed_sel", 1 0, L_000001f9be419390;  1 drivers
+S_000001f9be15d480 .scope module, "dut" "instructiondecoder" 2 22, 3 3 0, S_000001f9be15bd50;
  .timescale -9 -9;
     .port_info 0 /INPUT 16 "A";
     .port_info 1 /OUTPUT 4 "OP";
-    .port_info 2 /OUTPUT 4 "Q0";
-    .port_info 3 /OUTPUT 4 "Q1";
-    .port_info 4 /OUTPUT 4 "DEST";
-v000001ed940a51c0_0 .net "A", 15 0, v000001ed94082850_0;  1 drivers
-v000001ed940a7be0_0 .net "DEST", 3 0, L_000001ed941008e0;  alias, 1 drivers
-v000001ed940a4cb0_0 .net "OP", 3 0, L_000001ed94100840;  alias, 1 drivers
-v000001ed940a4af0_0 .net "Q0", 3 0, L_000001ed940b1550;  alias, 1 drivers
-v000001ed940827b0_0 .net "Q1", 3 0, L_000001ed940b1690;  alias, 1 drivers
-L_000001ed94100840 .part v000001ed94082850_0, 12, 4;
-L_000001ed941008e0 .part v000001ed94082850_0, 8, 4;
-L_000001ed940b1550 .part v000001ed94082850_0, 4, 4;
-L_000001ed940b1690 .part v000001ed94082850_0, 0, 4;
-    .scope S_000001ed940a5030;
+    .port_info 2 /OUTPUT 3 "Q0";
+    .port_info 3 /OUTPUT 3 "Q1";
+    .port_info 4 /OUTPUT 3 "DEST";
+    .port_info 5 /OUTPUT 4 "IMMEDIATE";
+    .port_info 6 /OUTPUT 12 "IMMEDIATE_B";
+    .port_info 7 /OUTPUT 1 "flag_en";
+    .port_info 8 /OUTPUT 2 "immed_sel";
+v000001f9be15b060_0 .net "A", 15 0, v000001f9be419b10_0;  1 drivers
+v000001f9be392bb0_0 .net "DEST", 2 0, L_000001f9be4197f0;  alias, 1 drivers
+v000001f9be15d610_0 .net "IMMEDIATE", 3 0, L_000001f9be419070;  1 drivers
+v000001f9be15d6b0_0 .net "IMMEDIATE_B", 11 0, L_000001f9be419e30;  1 drivers
+v000001f9be15d750_0 .net "OP", 3 0, L_000001f9be419110;  alias, 1 drivers
+v000001f9be15d7f0_0 .net "Q0", 2 0, L_000001f9be419d90;  alias, 1 drivers
+v000001f9be419930_0 .net "Q1", 2 0, L_000001f9be419ed0;  alias, 1 drivers
+L_000001f9be41a038 .functor BUFT 1, C4<0>, C4<0>, C4<0>, C4<0>;
+v000001f9be419a70_0 .net/2u *"_ivl_14", 0 0, L_000001f9be41a038;  1 drivers
+v000001f9be419bb0_0 .net *"_ivl_17", 0 0, L_000001f9be419890;  1 drivers
+v000001f9be419250_0 .net "flag_en", 0 0, L_000001f9be4191b0;  1 drivers
+v000001f9be419750_0 .net "immed_sel", 1 0, L_000001f9be419390;  alias, 1 drivers
+L_000001f9be419110 .part v000001f9be419b10_0, 12, 4;
+L_000001f9be4197f0 .part v000001f9be419b10_0, 9, 3;
+L_000001f9be419d90 .part v000001f9be419b10_0, 6, 3;
+L_000001f9be419ed0 .part v000001f9be419b10_0, 3, 3;
+L_000001f9be419070 .part v000001f9be419b10_0, 2, 4;
+L_000001f9be419e30 .part v000001f9be419b10_0, 0, 12;
+L_000001f9be4191b0 .part v000001f9be419b10_0, 1, 1;
+L_000001f9be419890 .part v000001f9be419b10_0, 0, 1;
+L_000001f9be419390 .concat [ 1 1 0 0], L_000001f9be419890, L_000001f9be41a038;
+    .scope S_000001f9be15bd50;
 T_0 ;
-    %vpi_call 2 25 "$display", "starting simulation" {0 0 0};
+    %vpi_call 2 26 "$display", "starting simulation" {0 0 0};
     %pushi/vec4 0, 0, 1;
-    %store/vec4 v000001ed94082b70_0, 0, 1;
+    %store/vec4 v000001f9be419f70_0, 0, 1;
     %end;
     .thread T_0;
-    .scope S_000001ed940a5030;
+    .scope S_000001f9be15bd50;
 T_1 ;
-    %vpi_func 2 30 "$time" 64 {0 0 0};
+    %vpi_func 2 31 "$time" 64 {0 0 0};
     %cmpi/u 1000000, 0, 64;
     %flag_or 5, 4; GT is !LE
     %flag_inv 5;
     %jmp/0xz  T_1.0, 5;
-    %vpi_call 2 31 "$finish" {0 0 0};
+    %vpi_call 2 32 "$finish" {0 0 0};
     %jmp T_1.1;
 T_1.0 ;
     %delay 10, 0;
-    %load/vec4 v000001ed94082b70_0;
+    %load/vec4 v000001f9be419f70_0;
     %inv;
-    %store/vec4 v000001ed94082b70_0, 0, 1;
+    %store/vec4 v000001f9be419f70_0, 0, 1;
 T_1.1 ;
     %jmp T_1;
     .thread T_1;
-    .scope S_000001ed940a5030;
+    .scope S_000001f9be15bd50;
 T_2 ;
-    %vpi_call 2 39 "$dumpfile", "idecoder16bit_tb.vcd" {0 0 0};
-    %vpi_call 2 40 "$dumpvars" {0 0 0};
+    %vpi_call 2 40 "$dumpfile", "idecoder16bit_tb.vcd" {0 0 0};
+    %vpi_call 2 41 "$dumpvars" {0 0 0};
     %end;
     .thread T_2;
-    .scope S_000001ed940a5030;
+    .scope S_000001f9be15bd50;
 T_3 ;
     %delay 20, 0;
     %pushi/vec4 0, 0, 16;
-    %store/vec4 v000001ed94082850_0, 0, 16;
+    %store/vec4 v000001f9be419b10_0, 0, 16;
     %delay 20, 0;
     %pushi/vec4 43981, 0, 16;
-    %store/vec4 v000001ed94082850_0, 0, 16;
+    %store/vec4 v000001f9be419b10_0, 0, 16;
     %delay 20, 0;
     %pushi/vec4 44563, 0, 16;
-    %store/vec4 v000001ed94082850_0, 0, 16;
+    %store/vec4 v000001f9be419b10_0, 0, 16;
     %delay 20, 0;
     %pushi/vec4 65505, 0, 16;
-    %store/vec4 v000001ed94082850_0, 0, 16;
+    %store/vec4 v000001f9be419b10_0, 0, 16;
     %delay 20, 0;
-    %vpi_call 2 54 "$display", "end simulation" {0 0 0};
+    %vpi_call 2 55 "$display", "end simulation" {0 0 0};
     %end;
     .thread T_3;
 # The file index is used to find the file name in the following table.
 :file_names 4;
     "N/A";
     "<interactive>";
-    "idecoder16bit_tb.v";
+    ".\idecoder16bit_tb.v";
     "./idecoder.v";

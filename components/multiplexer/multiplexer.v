@@ -53,6 +53,21 @@ assign Q =  (sel) ? A:
 
 endmodule
 
+module multiplexer3to1(A, B, C, sel, Q);
+
+input [15:0] A, B, C;
+input [1:0] sel;
+
+output [15:0] Q;
+
+assign Q =  (sel == 2'b11) ? A:
+            (sel == 2'b10) ? A:
+            (sel == 2'b01) ? B:
+            (sel == 2'b00) ? C:
+            16'hXXXX;
+
+endmodule
+
 
 module multiplexer8to3(A, B, C, D, E, F, G, H, sel0, sel1, sel2, Q0, Q1, Q2);
 
