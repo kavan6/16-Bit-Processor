@@ -110,7 +110,8 @@ class Generator:
         # Store R6 (constant) into open spot in stack
         self.output.append(f"ST R6 [R5 #0]")
 
-        # Load R1 with top of stack
+        # Load *R1* with top of stack
+        # R1 needs some form of allocation as it gets replaced if there are more than 2 operands in use
         self.output.append(f"LD R1 [R5 #0]")
         # Increment stack pointer
         self.output.append(f"ADD R5 R5 #1")
@@ -199,3 +200,4 @@ class Generator:
         else:
             # Move immediate constant into return register R6
             self.output.append(f"MOV R6 R7 #{constant}")
+
