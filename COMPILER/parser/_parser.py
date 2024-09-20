@@ -87,7 +87,75 @@ class Parser:
     
     def parse_exp(self):
 
-        # expression -> <term> { ('+' | '-') <term> }
+        # expression -> <logicalAndExp> { '||' <logicalAndExp> }
+
+        term = self.parse_logical_exp()
+
+        next = self.peek_next_token()
+
+        while next == '||':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term       
+        
+    def parse_logical_exp(self):
+
+        # logicalAndExp -> <equalityExp> { '&&' <equalityExp> }
+
+        term = self.parse_equality_exp()
+
+        next = self.peek_next_token()
+
+        while next == '&&':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term
+
+    def parse_equality_exp(self):
+
+        # equalityExp -> <relationalExp> { ('!=' | '==') <relationalExp> }
+
+        term = self.parse_relational_exp()
+
+        next = self.peek_next_token()
+
+        while next == '!=' or next == '==':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term
+    
+    def parse_relational_exp(self):
+
+        # relationalExp -> <additiveExp> { ('<=' | '>=' | '<' | '>') <additiveExp> }
+
+        term = self.parse_additive_exp()
+
+        next = self.peek_next_token()
+
+        while next == '<=' or next == '>=' or next == '<' or next == '>':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term
+    
+    def parse_additive_exp(self):
+        
+        # additiveExp -> <term> { ('+' | '-') <term>}
 
         term = self.parse_term()
 
@@ -100,8 +168,8 @@ class Parser:
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
 
-        return term       
-        
+        return term
+
     def parse_factor(self):
 
         # factor -> '(' <exp> ')' | <unaryOp> <factor> | <int> 
@@ -154,6 +222,8 @@ class Parser:
         # unary_op -> '~' | '!' | '-'
 
         if token == '+' or token == '*' or token == '/' or token == '~' or token == '!' or token == '-':
+            return token
+        elif token == '&&' or token == '||' or token == '<=' or token == '>=' or token == '<' or token == '>':
             return token      
         else:
             return 

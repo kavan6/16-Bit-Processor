@@ -70,6 +70,8 @@ class RegisterAllocator:
 
     def spill(self, node):
         print("SPILL:" + node)
+        
+
 
     def update_registers(self):
         for v_register, p_register in self._registers.items():

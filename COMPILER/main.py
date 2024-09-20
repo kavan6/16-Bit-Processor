@@ -17,7 +17,7 @@ t0.Tokenize(sys.argv)
 
 p0 = parser.Parser(t0.tokens)
 
-#print(p0.program)
+print(p0.program)
 
 g0 = generator.Generator(p0.program)
 
@@ -44,5 +44,8 @@ with open(output_soruce, 'w') as outfile:
     for line in machine_code:
         outfile.write(line + "\n")
 
+
+    outfile.write("FFFF" + "\n")
+    #outfile.write("FFFF")
     outfile.close()
 

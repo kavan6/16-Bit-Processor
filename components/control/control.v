@@ -65,7 +65,8 @@ module controlunit(init, OP, en, immed_in, b_immed_in, flag_in, b_in, clk_out, i
             #10 clk_out = ~clk_out;
         end else begin
             #10 clk_out = clk_out;
-        end        
+        end
+
     end
 
 

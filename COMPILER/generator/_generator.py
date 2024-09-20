@@ -119,9 +119,9 @@ class Generator:
         self.generate_code(node._exp1)
 
         if node._operator == '+':           
-            self.output.append(f"ADD R1 R1 R6")
+            self.output.append(f"ADD R6 R1 R6")
         elif node._operator == '-':
-            self.output.append(f"SUB R1 R1 R6")
+            self.output.append(f"SUB R6 R1 R6")
         elif node._operator == '*':
             
             self.output.append(f"MOV R0 R7 #0")
@@ -149,8 +149,41 @@ class Generator:
 
         elif node._operator == '/':
             print("DIVIDE")
+
+            
+        elif node._operator == '||':
+            self.output.append(f"OR R6 R1 R6")
+        elif node._operator == '&&':
+            self.output.append(f"AND R6 R1 R6")
+        elif node._operator == '!=':
+            print("NOT EQUALS")
+        elif node._operator == '==':
+
+            label_ne = self.gen_label()
+            label_end = self.gen_label()
+
+            # compare operands
+            self.output.append(f"CMP R0 R1 R6")
+            # branch if not equal
+            self.output.append(f"BNE {label_ne}")
+            self.output.append(f"MOV R6 R0 #1")
+            self.output.append(f"JMP {label_end}")
+
+            self.output.append(f"{label_ne}:")
+            self.output.append(f"MOV R6 R0 #0")
+
+            self.output.append(f"{label_end}:")
+
+        elif node._operator == '<=':
+            print("LESS THAN EQUALS")
+        elif node._operator == '>=':
+            print("GREATER THAN EQUALS")
+        elif node._operator == '<':
+            print("LESS THAN")
+        elif node._operator == '>':
+            print("GREATER THAN")
         else:
-            raise ValueError("Unknown binary operator {node._operator}")
+            raise ValueError(f"Unknown binary operator {node._operator}")
 
     def get_assembly(self):
 

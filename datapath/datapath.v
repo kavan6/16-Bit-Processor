@@ -37,6 +37,14 @@ assign IMMED_SXT = { 12'b0, IMMED };
 assign IMMED_B_SXT = { 5'b0, IMMED_B} ;
 
 
+always @(*) begin
+    if (I_MEMORY_OUT == 16'hFFFF) begin
+        $display("Return register value: ");
+        $display("Program terminated");
+        $finish;
+    end
+end
+
 // PIPE LINE BARRIERS
 
 register16bit FETCH_BARRIER0(.D(I_IN), .clk(CLK), .en(FETCH), .reset(init), .Q(I_IN_OUT));
