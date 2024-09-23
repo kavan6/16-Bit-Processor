@@ -124,14 +124,18 @@ class Generator:
             self.output.append(f"SUB R6 R1 R6")
         elif node._operator == '*':
             
+            # OPERATION: R1*R6 -> R6
+
             self.output.append(f"MOV R0 R7 #0")
 
-            label_end = self.gen_label()
+            label_finish = self.gen_label()
+
+            label_zero = self.gen_label()
 
             self.output.append(f"CMP R7 R1 R7")
-            self.output.append(f"BEQ {label_end}")
+            self.output.append(f"BEQ {label_zero}")
             self.output.append(f"CMP R7 R6 R7")
-            self.output.append(f"BEQ {label_end}")
+            self.output.append(f"BEQ {label_zero}")
 
             label_loop = self.gen_label()
 
@@ -143,12 +147,54 @@ class Generator:
 
             self.output.append(f"BNE {label_loop}")
 
-            self.output.append(f"{label_end}:")
+            self.output.append(f"{label_zero}:")
             self.output.append(f"MOV R6 R0 #0")
+
+            self.output.append(f"{label_finish}:")
 
 
         elif node._operator == '/':
-            print("DIVIDE")
+            
+            # OPERATION: R1/R6 -> R6
+
+            # if R6 is 0 we have divide by 0
+            if node._exp1 == 0:
+                raise ValueError(f"Divide by 0 error")
+
+            # initialise accumulator reg (R0) to 0
+            self.output.append(f"MOV R0 R7 #0")
+
+            # set operation finish label
+            label_finish = self.gen_label()
+
+            # set 0 label
+            label_zero = self.gen_label()
+
+            # if first operand is 0 go to end
+            # only need to check the first operand with division
+            self.output.append(f"CMP R7 R1 R7")
+            self.output.append(f"BEQ {label_zero}")
+
+            # set loop label
+            label_loop = self.gen_label()
+
+            # beginning of operation loop
+            self.output.append(f"{label_loop}:")
+            
+            # subtract op1 from op1
+            self.output.append(f"SUB R1 R1 R6")
+
+            self.output.append(f"ADDS R0 R0 #1")
+
+            self.output.append(f"BGT {label_loop}")
+            self.output.append(f"BEQ {label_loop}")
+            self.output.append(f"JMP {label_finish}")
+
+            self.output.append(f"{label_zero}:")
+            # set return register to 0 (0/anything = 0)
+            self.output.append(f"MOV R6 R0 #0")
+            
+            self.output.append(f"{label_finish}:")
 
             
         elif node._operator == '||':
