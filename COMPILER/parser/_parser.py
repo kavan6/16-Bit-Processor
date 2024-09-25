@@ -104,9 +104,9 @@ class Parser:
         
     def parse_logical_exp(self):
 
-        # logicalAndExp -> <equalityExp> { '&&' <equalityExp> }
+        # logicalAndExp -> <logicalLeftShift> { '&&' <logicalLeftShift> }
 
-        term = self.parse_equality_exp()
+        term = self.parse_lsl_exp()
 
         next = self.peek_next_token()
 
@@ -118,6 +118,59 @@ class Parser:
             next = self.peek_next_token()
 
         return term
+
+    def parse_lsl_exp(self):
+
+        # logicalLeftShift -> <bitwiseXorExp> { '<<' <bitwiseXorExp> }
+
+        term = self.parse_lsr_exp()
+
+        next = self.peek_next_token()
+
+        while next == '<<':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term
+
+    def parse_lsr_exp(self):
+
+        # logicalLeftShift -> <bitwiseXorExp> { '<<' <bitwiseXorExp> }
+
+        term = self.parse_bitwisexor_exp()
+
+        next = self.peek_next_token()
+
+        while next == '>>':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term     
+
+
+    def parse_bitwisexor_exp(self):
+
+        # bitwiseXorExp -> <equalityExp> { '^' <equalityExp> }
+
+        term = self.parse_equality_exp()
+
+        next = self.peek_next_token()
+
+        while next == '^':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_term = self.parse_term()
+            term = BinaryOp(op, term, next_term)
+            next = self.peek_next_token()
+
+        return term      
+
 
     def parse_equality_exp(self):
 
@@ -170,6 +223,23 @@ class Parser:
 
         return term
 
+    def parse_term(self):
+
+        # term -> <factor> { ('*' | '/' | '%') <factor> }
+
+        factor = self.parse_factor()
+
+        next = self.peek_next_token()
+
+        while next == '*' or next == '/' or next == '%':
+            token = self.pop_next_token()
+            op = self.check_op(token)
+            next_factor = self.parse_factor()
+            factor = BinaryOp(op, factor, next_factor)
+            next = self.peek_next_token()
+
+        return factor
+
     def parse_factor(self):
 
         # factor -> '(' <exp> ')' | <unaryOp> <factor> | <int> 
@@ -190,24 +260,6 @@ class Parser:
             factor = self.parse_factor()
             return UnaryOp(op, factor)
 
-    def parse_term(self):
-
-        # term -> <factor> { ('*' | '/') <factor> }
-
-        factor = self.parse_factor()
-
-        next = self.peek_next_token()
-
-        while next == '*' or next == '/':
-            token = self.pop_next_token()
-            op = self.check_op(token)
-            next_factor = self.parse_factor()
-            factor = BinaryOp(op, factor, next_factor)
-            next = self.peek_next_token()
-
-        return factor
-
-
     def parse_unary(self, token):
 
         if token == '~' or token == '!' or token == '-':
@@ -224,10 +276,14 @@ class Parser:
         if token == '+' or token == '*' or token == '/' or token == '~' or token == '!' or token == '-':
             return token
         elif token == '&&' or token == '||' or token == '<=' or token == '>=' or token == '<' or token == '>':
-            return token 
+            return token
         elif token == '==' or token == '!=':
-            return token     
+            return token
+        elif token == '%' or token == '<<' or token == '>>' or token == '^':
+            return token 
+        elif token == '&' or token == '|':
+            raise SyntaxError("Bitwise & and | not supported")
         else:
+            raise SyntaxError("Invalid operator")
             return 
-            raise SyntaxError("Invalid operator expected: (+, *, /, !, -, ~)")
         

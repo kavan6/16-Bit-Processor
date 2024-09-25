@@ -42,8 +42,6 @@ class Assembler:
             else:
                 address += 1
 
-        print(self._label_map["end"])
-
     def generate_machine_code(self):
         
         m_code = []

@@ -46,7 +46,7 @@ class Generator:
         self.output.append(f"{func_name}:")
 
 
-        self.make_constant(self._stack_addr)
+        self.gen_constant(self._stack_addr)
 
         # Initialise stack pointer register R5
         self.output.append(f"MOV R5 R7 #0")
@@ -71,7 +71,7 @@ class Generator:
         # Set constant
         constant = node._integer
 
-        self.make_constant(constant)
+        self.gen_constant(constant)
 
     def visit_unary(self, node):
 
@@ -134,11 +134,20 @@ class Generator:
 
             self.gen_division()
 
+        elif node._operator == '%':
+
+            self.gen_modulo()
             
         elif node._operator == '||':
             self.output.append(f"OR R6 R1 R6")
         elif node._operator == '&&':
             self.output.append(f"AND R6 R1 R6")
+        elif node._operator == '<<':
+            self.output.append(f"LSL R6 R1 R6")
+        elif node._operator == '>>':
+            self.output.append(f"LSR R6 R1 R6")
+        elif node._operator == '^':
+            self.output.append(f"XOR R6 R1 R6")
         elif node._operator == '!=':
             
             self.gen_notequal()
@@ -247,6 +256,10 @@ class Generator:
         
         self.output.append(f"{label_finish}:")
 
+    def gen_modulo(self):
+
+        print("MODULO")
+
     def gen_notequal(self):
 
         label_eq = self.gen_label()
@@ -334,7 +347,7 @@ class Generator:
         self.output.append(f"{label_end}:")
 
     def gen_gt(self):
-        
+
         label_le = self.gen_label()
         label_end = self.gen_label()
 
@@ -352,7 +365,7 @@ class Generator:
         self.output.append(f"{label_end}:")
 
 
-    def make_constant(self, constant):
+    def gen_constant(self, constant):
 
         if int(constant) > 15 or int(constant) < 0:
             # Make constant as it cannot be created with an immediate

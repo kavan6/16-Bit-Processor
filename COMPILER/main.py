@@ -13,7 +13,7 @@ from allocator import _allocator as allocator
 t0 = lexer.Tokenizer()
 t0.Tokenize(sys.argv)
 
-#print(t0.tokens)
+print(t0.tokens)
 
 p0 = parser.Parser(t0.tokens)
 
