@@ -224,7 +224,9 @@ class Parser:
         if token == '+' or token == '*' or token == '/' or token == '~' or token == '!' or token == '-':
             return token
         elif token == '&&' or token == '||' or token == '<=' or token == '>=' or token == '<' or token == '>':
-            return token      
+            return token 
+        elif token == '==' or token == '!=':
+            return token     
         else:
             return 
             raise SyntaxError("Invalid operator expected: (+, *, /, !, -, ~)")
