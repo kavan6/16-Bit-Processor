@@ -20,6 +20,23 @@ class UnaryOp:
     def __repr__(self) -> str:
         return f"UnaryOp({self._operator, self._exp})"
 
+class Assign:
+
+    def __init__(self, _name, _exp):
+        self._name = _name
+        self._exp = _exp
+
+    def __repr__(self) -> str:
+        return f"Assign({self._name, self._exp})"
+
+class Var:
+
+    def __init__(self, _string):
+        self._string = _string
+
+    def __repr__(self) -> str:
+        return f"Var({self._string})"
+
 
 class Const:
 
@@ -28,6 +45,24 @@ class Const:
 
     def __repr__(self) -> str:
         return f"Constant({self._integer})"
+
+class Exp:
+
+    def __init__(self, _exp):
+        self._exp = _exp
+
+    def __repr__(self) -> str:
+        return f"Exp({self._exp})"
+
+
+class Declare:
+
+    def __init__(self, _string, _exp = 0):
+        self._string = _string
+        self._exp = _exp
+
+    def __repr__(self) -> str:
+        return f"Declare({self._string, self._exp})"
 
 class Ret:
 
@@ -39,12 +74,12 @@ class Ret:
 
 class Function:
 
-    def __init__(self, _string, _statement):
+    def __init__(self, _string, _statements):
         self._string = _string
-        self._statement = _statement
+        self._statements = _statements
 
     def __repr__(self) -> str:
-        return f"Function({self._string}, {self._statement})"
+        return f"Function({self._string}, {self._statements})"
 
 class Program:
 

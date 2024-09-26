@@ -19,6 +19,12 @@ class Parser:
         else:
             return None
 
+    def peek_n_token(self, n):
+        if len(self.tokens) > n:
+            return self.tokens[n]
+        else:
+            return None        
+
     def pop_next_token(self):
         if len(self.tokens) > 0:
             return self.tokens.pop(0)
@@ -34,7 +40,7 @@ class Parser:
     
     def parse_func_dec(self):
         
-        # function -> "int" <name> "(" ")" "{" <statement> "}"
+        # function -> "int" <name> "(" ")" "{" { <statement> } "}"
 
         token = self.pop_next_token()
 
@@ -58,51 +64,113 @@ class Parser:
         if token != '{':
             raise SyntaxError("Expected '{'")
 
-        statement = self.parse_statement()
+        next = self.peek_next_token()
+
+        statements = []
+
+        while next != '}':
+            statement = self.parse_statement()
+            statements.append(statement)
+            next = self.peek_next_token()
 
         token = self.pop_next_token()
 
         if token != '}':
             raise SyntaxError("Expected '}'")
 
-        return Function(name, statement)
+        return Function(name, statements)
     
     def parse_statement(self):
 
-        # statement -> <variable> '=' <exp> | "return" <exp> ";"
+        # statement -> "return" <exp> ";" | <exp> ";" | "int" <name> [ = <exp> ] ";"
 
-        token = self.pop_next_token()
+        token = self.peek_next_token()
 
-        if token != 'return':
-            raise SyntaxError("Expected 'return' keyword")
+        if token == 'return':
+            ret = self.pop_next_token()
+            exp = self.parse_exp()   
+
+            token = self.pop_next_token()
+
+            if token != ';':
+                raise SyntaxError("Expected ';'")
+
+            return Ret(exp)
+
+        elif token == 'int':
+            integ = self.pop_next_token()
+            name = self.pop_next_token()
+
+            next = self.peek_next_token()
+
+            if next == ';':
+                return Declare(name)
+            else:
+                op = self.pop_next_token()
+                exp = self.parse_exp()
+
+                print(exp)
+
+                token = self.pop_next_token()
+
+                if token != ';':
+                    raise SyntaxError("Expected ';'")
+                
+                return Declare(name, exp)
+
+        else:
+            exp = self.parse_exp()
+
+            token = self.pop_next_token()
+            
+            if token != ';':
+                raise SyntaxError("Expected ';'")
+            
+            return Exp(exp)
         
-        exp = self.parse_exp()
-
-        token = self.pop_next_token()
-
-        if token != ';':
-            raise SyntaxError("Expected ';'")
-
-        return Ret(exp)
     
     def parse_exp(self):
 
-        # expression -> <logicalAndExp> { '||' <logicalAndExp> }
+        # expression -> <name> "=" <exp> | <logicalOrExp>
 
-        term = self.parse_logical_exp()
+        token = self.peek_n_token(1)
+
+        if token == '=':
+            name = self.pop_next_token()
+
+            op = self.pop_next_token()
+
+            exp = self.parse_exp()
+
+            return Assign(name, exp)
+        else:
+            token = self.parse_logicalor_exp()
+            
+            return Exp(token)
+
+              
+    
+    def parse_logicalor_exp(self):
+
+        # logicalOrExp -> <logicalAndExp> { '||' <logicalAndExp> }
+
+        term = self.parse_logicaland_exp()
 
         next = self.peek_next_token()
 
         while next == '||':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
 
-        return term       
-        
-    def parse_logical_exp(self):
+        return term
+
+
+
+    def parse_logicaland_exp(self):
 
         # logicalAndExp -> <logicalLeftShift> { '&&' <logicalLeftShift> }
 
@@ -112,7 +180,8 @@ class Parser:
 
         while next == '&&':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -129,7 +198,8 @@ class Parser:
 
         while next == '<<':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -146,7 +216,8 @@ class Parser:
 
         while next == '>>':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -164,7 +235,8 @@ class Parser:
 
         while next == '^':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -182,7 +254,8 @@ class Parser:
 
         while next == '!=' or next == '==':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -199,7 +272,8 @@ class Parser:
 
         while next == '<=' or next == '>=' or next == '<' or next == '>':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -216,7 +290,8 @@ class Parser:
 
         while next == '+' or next == '-':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_term = self.parse_term()
             term = BinaryOp(op, term, next_term)
             next = self.peek_next_token()
@@ -233,7 +308,8 @@ class Parser:
 
         while next == '*' or next == '/' or next == '%':
             token = self.pop_next_token()
-            op = self.check_op(token)
+            self.check_op(token)
+            op = token
             next_factor = self.parse_factor()
             factor = BinaryOp(op, factor, next_factor)
             next = self.peek_next_token()
@@ -242,7 +318,7 @@ class Parser:
 
     def parse_factor(self):
 
-        # factor -> '(' <exp> ')' | <unaryOp> <factor> | <int> 
+        # factor -> '(' <exp> ')' | <unaryOp> <factor> | <int> | <name>
 
         token = self.pop_next_token()
 
@@ -255,10 +331,14 @@ class Parser:
                       
         elif token.isdigit():
             return Const(int(token))
-        else:
-            op = self.check_op(token)
+        elif self.check_op(token):
+            op = token
             factor = self.parse_factor()
             return UnaryOp(op, factor)
+        else:
+            name = token
+
+            return Var(name)
 
     def parse_unary(self, token):
 
@@ -274,16 +354,14 @@ class Parser:
         # unary_op -> '~' | '!' | '-'
 
         if token == '+' or token == '*' or token == '/' or token == '~' or token == '!' or token == '-':
-            return token
+            return True
         elif token == '&&' or token == '||' or token == '<=' or token == '>=' or token == '<' or token == '>':
-            return token
+            return True
         elif token == '==' or token == '!=':
-            return token
+            return True
         elif token == '%' or token == '<<' or token == '>>' or token == '^':
-            return token 
+            return True 
         elif token == '&' or token == '|':
             raise SyntaxError("Bitwise & and | not supported")
         else:
-            raise SyntaxError("Invalid operator")
-            return 
-        
+            return False     
