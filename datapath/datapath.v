@@ -74,7 +74,7 @@ regfile REGISTER_FILE(.DEST(DEST), .SRC0(SRC0), .SRC1(SRC1), .clk(CLK), .w_in(WR
 
 multiplexer3to1 IMMED_MUX(.A(IMMED_B_SXT), .B(IMMED_SXT), .C(D_DATA), .sel(IMMED_SEL), .Q(OP1));
 
-alu ALU(.func(ALU_FUNC), .OP0(OP0), .OP1(OP1), .clk(DECODE), .flag_en(FLAG_EN), .flag_in(FLAG_IN), .Q(ALU_OUT), .flag_out(FLAG_OUT), .b_out(B_OUT));
+alu ALU(.func(ALU_FUNC), .OP0(OP0), .OP1(OP1), .clk(DECODE), .flag_en(FLAG_EN), .flag_in(FLAG_IN), .b_sel(I_SEL), .Q(ALU_OUT), .flag_out(FLAG_OUT), .b_out(B_OUT));
 
 RAM RAM_MEMORY(.A(DEST_OUT), .addr(ALU_OUT), .en(D_EN), .rw(READ_WRITE), .Q(D_MEMORY));
 

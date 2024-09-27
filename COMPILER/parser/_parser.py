@@ -109,8 +109,6 @@ class Parser:
                 op = self.pop_next_token()
                 exp = self.parse_exp()
 
-                print(exp)
-
                 token = self.pop_next_token()
 
                 if token != ';':
@@ -126,7 +124,7 @@ class Parser:
             if token != ';':
                 raise SyntaxError("Expected ';'")
             
-            return Exp(exp)
+            return exp
         
     
     def parse_exp(self):
@@ -146,7 +144,7 @@ class Parser:
         else:
             token = self.parse_logicalor_exp()
             
-            return Exp(token)
+            return token
 
               
     

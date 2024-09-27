@@ -7,13 +7,31 @@ class Generator:
     def __init__(self, AST):
         self._AST = AST
 
-        self._func_label = None
-        self._stack_addr = None
+        self._stack_index = None
 
         self._label_count = 0
         self._stack_count = 512
 
+        self._var_map = {}
+
         self.output = []
+
+
+
+        self._stack_index = self.gen_stack()
+
+        # Generate stack pointer
+        self.gen_constant(self._stack_index)
+
+        # Initialise stack pointer register R5
+        self.output.append(f"MOV R5 R7 #0")
+        self.output.append(f"ADD R5 R7 R6")
+
+        # Initialise stack base register R4
+        self.output.append(f"MOV R4 R5 #0")
+
+
+        # Start generation        
         self.generate_code(self._AST)
 
     def generate_code(self, node):
@@ -30,6 +48,12 @@ class Generator:
             return self.visit_unary(node)
         elif isinstance(node, BinaryOp):
             return self.visit_binary(node)
+        elif isinstance(node, Assign):
+            return self.visit_assign(node)
+        elif isinstance(node, Declare):
+            return self.visit_declare(node)
+        elif isinstance(node, Var):
+            return self.visit_var(node)
         else:
             raise ValueError(f"Unknown AST node type: {type(node)}")
     
@@ -38,33 +62,56 @@ class Generator:
 
     def visit_function(self, node):
         func_name = node._string
-        self._func_label = func_name
-
-        self._stack_addr = self.gen_stack()
+        func_ret = self.gen_label()
 
         # Function entry point label
         self.output.append(f"{func_name}:")
 
+        # FUNCTION PROLOGUE
 
-        self.gen_constant(self._stack_addr)
+        # Push return address
+        self.output.append(f"SUB R5 R5 #1")
+        self._stack_index -= 1
+        # R3 link register
+        self.output.append(f"ST R3 [R5 #0]")       
 
-        # Initialise stack pointer register R5
-        self.output.append(f"MOV R5 R7 #0")
-        self.output.append(f"ADD R5 R7 R6")
+        # Push stack base R4
+        self.output.append(f"SUB R5 R5 #1")
+        self._stack_index -= 1
+        self.output.append(f"ST R4 [R5 #0]")
+
+        # Update stack base to the current stack pointer
+        self.output.append(f"MOV R4 R5 #0")
+
+        # FUNCTION BODY
 
         # Gen function body
-        self.generate_code(node._statement)
+        for statement in node._statements:
+            self.generate_code(statement)
 
         # Function end point label
-        self.output.append(f"end:")
+        self.output.append(f"{func_ret}:")
 
     def visit_return(self, node):
 
         # Generate return expression
         self.generate_code(node._exp)
 
+        # Restore stack pointer 
+        self.output.append(f"MOV R5 R4 #0")       
+
+        # Pop stack base 
+        self.output.append(f"LD R4 [R5 #0]")
+        self.output.append(f"ADD R5 R5 #1")
+        self._stack_index += 1
+
+        # Pop return address 
+        self.output.append(f"LD R3 [R5 #0]")
+        self.output.append(f"ADD R5 R5 #1")      
+        self._stack_index += 1
+
         # Exit function
-        self.output.append(f"JMP end")
+        self.output.append(f"JMP R3")
 
     def visit_constant(self, node):
 
@@ -96,8 +143,8 @@ class Generator:
         elif node._operator == '-':
             self.output.append(f"SUB R6 R0 R6")
         elif node._operator == '~':
-            self.output.append(f"SUB R5 R0 #1")
-            self.output.append(f"XOR R6 R5 R5")
+            self.output.append(f"SUB R0 R0 #1")
+            self.output.append(f"XOR R6 R0 R0")
         else:
             raise ValueError(f"Unknown unary operator")
 
@@ -107,6 +154,7 @@ class Generator:
 
         # Decrement stack pointer
         self.output.append(f"SUB R5 R5 #1")
+        self._stack_index -= 1
         # Store R6 (constant) into open spot in stack
         self.output.append(f"ST R6 [R5 #0]")
 
@@ -115,6 +163,8 @@ class Generator:
         self.output.append(f"LD R1 [R5 #0]")
         # Increment stack pointer
         self.output.append(f"ADD R5 R5 #1")
+        self._stack_index += 1
+
 
         self.generate_code(node._exp1)
 
@@ -174,6 +224,59 @@ class Generator:
 
         else:
             raise ValueError(f"Unknown binary operator {node._operator}")
+
+    def visit_assign(self, node):        
+        # Generate code for expression and return it in R6
+        self.generate_code(node._exp)
+
+        if node._name not in self._var_map:
+            raise ValueError(f"Variable not declared")
+
+        # Get variable addr
+        var_offset = self._var_map[node._name]
+
+        # Hold R6 (expression value) in R1
+        self.output.append(f"MOV R1 R6 #0")
+
+        # Gen addr to store to into R6
+        self.gen_constant(var_offset)
+
+        # Calculate offset addr
+        self.output.append(f"ADD R6 R6 R4")
+
+        # Store variable at correct location
+        self.output.append(f"ST R1 [R6 #0]")
+
+    def visit_declare(self, node):
+        if node._string in self._var_map:
+            raise ValueError(f"Variable already declared")
+        
+        # Generate code for expression and return it in R6
+        self.generate_code(node._exp)
+
+        # Push variable to stack
+        self.output.append(f"SUB R5 R5 #1")
+        self._stack_index -= 1
+        self.output.append(f"ST R6 [R5 #0]")
+
+        self._var_map[node._string] = self._stack_index
+
+
+    def visit_var(self, node):
+        if node._string not in self._var_map:
+            raise ValueError(f"Variable not declared")
+
+        var_offset = self._var_map[node._string]
+
+        # Gen addr to store to into R6
+        self.gen_constant(var_offset)
+
+        # Calculate offset addr
+        self.output.append(f"ADD R6 R6 R4")
+
+        # Store variable at correct location
+        self.output.append(f"ST R6 [R6 #0]")
+
 
     def get_assembly(self):
 

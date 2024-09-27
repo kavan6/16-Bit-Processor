@@ -110,9 +110,13 @@ class Assembler:
                 else:
                     raise ValueError("MOV instruction missing immediate")
             elif 'BEQ' in instruction or 'BNE' in instruction or 'BLT' in instruction or 'BGT' in instruction or 'JMP' in instruction:
-                label = instruction.split(' ')[1]
+                parts = instruction.split(' ')
+                label = parts[1]
                 if label in self._label_map:
                     code = self._op_map[instruction.split(' ')[0]] + self.get_address_code(self._label_map[label]) + '1'
+                elif 'R' in label:
+                    REG = self.get_reg_code(label)
+                    code = self._op_map[instruction.split(' ')[0]] + '000' + REG + '00000' + '0'
                 else:
                     raise ValueError(f"Undefined label {label}")
             elif 'CMP' in instruction:

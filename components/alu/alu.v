@@ -11,12 +11,12 @@
 `ifndef alu_V
 `define alu_v
 
-module alu(func, OP0, OP1, clk, flag_en, flag_in, Q, flag_out, b_out);
+module alu(func, OP0, OP1, clk, flag_en, flag_in, b_sel, Q, flag_out, b_out);
 
 input wire [3:0] func;
 input wire [15:0] OP0, OP1;
 input wire [3:0] flag_in;
-input wire flag_en, clk;
+input wire flag_en, clk, b_sel;
 
 output reg [15:0] Q;
 output reg [3:0] flag_out;
@@ -35,9 +35,17 @@ always @(posedge clk, func, OP1) begin
         // JMP
         4'b0000: begin
             if (flag_en) begin
-                {Q} <= {OP1};
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
             end else begin
-                {Q} <= {OP1};
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
             end
             b_out <= 1'b1;
         end
@@ -172,7 +180,11 @@ always @(posedge clk, func, OP1) begin
         // BEQ
         4'b1011: begin
             if (flag_out[0] == 1'b1) begin
-                {Q} <= {OP1};
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
                 b_out <= 1'b1;
             end else begin
                 b_out <= 1'b0;
@@ -181,7 +193,11 @@ always @(posedge clk, func, OP1) begin
         // BNE
         4'b1100: begin
             if (flag_out[0] == 1'b0) begin
-                Q <= OP1;
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
                 b_out <= 1'b1;
             end else begin        
                 b_out <= 1'b0;
@@ -190,7 +206,11 @@ always @(posedge clk, func, OP1) begin
         // BLT
         4'b1101: begin
             if ((flag_out[2] == 1'b1) && (flag_out[0] == 1'b0)) begin
-                {Q} <= {OP1};
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
                 b_out <= 1'b1;
             end else begin
                 b_out <= 1'b0;
@@ -200,7 +220,11 @@ always @(posedge clk, func, OP1) begin
         // BGT
         4'b1110: begin
             if ((flag_out[2] == 1'b0) && (flag_out[0] == 1'b0)) begin
-                {Q} <= {OP1};
+                if (b_sel) begin
+                    {Q} <= {OP1};
+                end else begin
+                    {Q} <= {OP0};
+                end
                 b_out <= 1'b1;
             end else begin
                 b_out <= 1'b0;
